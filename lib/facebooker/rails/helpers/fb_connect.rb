@@ -88,14 +88,21 @@ module Facebooker
           options = args[1] || {}
           options.merge!(:onlogin=>callback)if callback
 
-          content_tag("fb:login-button",nil, options)
+          text = options.delete(:text)
+          options[:v] = 2 if text
+
+          content_tag("fb:login-button",text, options)
         end
 
         def fb_login_and_redirect(url, options = {})
           js = update_page do |page|
             page.redirect_to url
           end
-          content_tag("fb:login-button",nil,options.merge(:onlogin=>js))
+
+          text = options.delete(:text)
+          options[:v] = 2 if text
+
+          content_tag("fb:login-button",text,options.merge(:onlogin=>js))
         end
 
         def fb_unconnected_friends_count
